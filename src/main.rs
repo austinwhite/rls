@@ -1,12 +1,24 @@
+extern crate structopt;
+
 use std::fs;
 use std::path::Path;
 use std::error::Error;
 use std::process;
+use std::path::PathBuf;
+use structopt::StructOpt;
+
+#[derive(StructOpt, Debug)]
+struct Opt {
+	/// Output file
+	#[structopt(default_value = ".", parse(from_os_str))]
+	path: PathBuf,
+}
 
 fn main() {
-	if let Err(ref e) = run(Path::new(".")) {
-		println!("{}", e);
-		process::exit(1);
+	let opt = Opt::from_args();
+	if let Err(ref e) = run(&opt.path) {
+			println!("{}", e);
+			process::exit(1);
 	}
 }
 
